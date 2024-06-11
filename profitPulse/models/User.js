@@ -1,11 +1,11 @@
-const { Schema } = require('mongoose')
+const { Schema } = require("mongoose")
 
 const userSchema = new Schema(
   {
     name: { type: String, required: true },
     email: { type: String, required: true },
     passwordDigest: { type: String },
-    income: { type: String }
+    totalIncome: { type: String },
   },
   { timestamps: true }
 )
