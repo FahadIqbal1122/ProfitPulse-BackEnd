@@ -1,11 +1,14 @@
+const income = require("../models/income")
 const Income = require("../models/income")
 module.exports = {
   index,
   show,
   new: newIncome,
   create,
-  findIncome,
   delete: deleteIncome,
+  edit: editIncome,
+  update,
+  findIncome,
 }
 // function Index - to create index
 async function index(req, res) {
@@ -52,7 +55,7 @@ async function create(res, res) {
     const newIncome = await expense.save()
     console.log(newIncome)
     // redirect user to detailsPg to newly created income passing url
-    res.redirect("/income/${newIncome._id}")
+    res.redirect(`/income/${newIncome._id}`)
   } catch (error) {
     console.log("Error creating incomes", error)
   }
@@ -95,4 +98,20 @@ async function deleteIncome(req, res) {
     user: req.user._id,
   })
   res.redirect("/incomes")
+}
+async function editIncome(req, res) {
+  console.log(req.params.id)
+  const Income = await Income.findById(req.params.id)
+  console.log(income)
+  // pass income object to edit view for rendering
+  res.render("incomes/edit", {
+    income,
+  })
+}
+async function update(req, res) {
+  const incomeId = req.params.id
+  const updateIncome = req.body
+  console.log(updateIncome)
+  await Income.findByIdAndUpadate(incomeId, updateIncome)
+  res.redirect(`/income/${incomeId}`)
 }
