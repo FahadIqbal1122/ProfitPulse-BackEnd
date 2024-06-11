@@ -1,9 +1,9 @@
 const mongoose = require("mongoose")
-const userSchema = require("./User")
-const ExpenseSchema = require("./expense")
+const UserSchema = require("./User")
+const ExpenseSchema = require("./Expense")
 
-const User = mongoose.model("User", userSchema)
-const Expense = mongoose.model("expense", ExpenseSchema)
+const User = mongoose.model("User", UserSchema)
+const Expense = mongoose.model("Expense", ExpenseSchema)
 
 module.exports = {
   User,
