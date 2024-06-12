@@ -20,6 +20,8 @@ app.use(express.urlencoded({ extended: false }))
 
 app.use("/auth", AuthRouter)
 app.use("/expense", ExpenseRouter)
+app.use("/income", IncomeRouter)
+app
 
 app.use("/", (req, res) => {
   res.send(`Connected!`)

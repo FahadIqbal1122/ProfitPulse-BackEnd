@@ -15,7 +15,7 @@ const GetIncome = async (req, res) => {
 const createIncome = async (req, res) => {
   try {
     const userId = req.userId
-    const income = new Income({ ...req.body, userId })
+    const income = new Income({ ...req.body })
     const savedIncome = await income.save()
     res.send(savedIncome)
   } catch (error) {
