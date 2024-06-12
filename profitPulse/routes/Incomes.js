@@ -7,6 +7,6 @@ router.post("/", incomeCtrl.createIncome)
 
 router.put("/:income_id", incomeCtrl.updateIncome)
 
-router.delete("/income_id", incomeCtrl.deleteIncome)
+router.delete("/:income_id", incomeCtrl.deleteIncome)
 
 module.exports = router

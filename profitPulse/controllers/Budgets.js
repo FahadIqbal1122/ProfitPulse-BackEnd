@@ -10,42 +10,43 @@ const getBudget = async (req, res) => {
 }
 
 async function create(req, res) {
-  const budget = await Budget.findById(req.params.id)
-  req.body.user = req.user._id
-  budget.push(req.body)
   try {
-    await budget.save()
-  } catch (err) {
-    console.log(err)
+    const budget = new Budget({ ...req.body })
+    const savedBudget = await budget.save()
+    res.send(savedBudget)
+  } catch (error) {
+    console.error("Error creating budget:", error)
   }
-  res.redirect(`/budget/${budget._id}`)
 }
 
 async function deleteBudget(req, res) {
-  const budget = await Budget.findOne({
-    "budget._id": req.params.id,
-    "budgets.user": req.user._id,
-  })
-  if (!budget) return res.redirect("/budget")
-  budget.remove(req.params.id)
-  await budget.save()
-  res.redirect(`/budgets/${budget._id}`)
+  try {
+    await Budget.deleteOne({ _id: req.params.budget_id })
+    res.send({
+      msg: "Budget Deleted",
+      payload: req.params.budget_id,
+      status: "Ok",
+    })
+  } catch (error) {
+    throw error
+  }
 }
 
-const update = async (req, res) => {
+const updateBudget = async (req, res) => {
   try {
-    const budget = await Budget.findById(req.user.budget)
-
-    const updatedBudget = await budget.save()
-
-    res.redirect(`/budget`)
+    const budget = await Budget.findByIdAndUpdate(
+      req.params.budget_id,
+      req.body,
+      { new: true }
+    )
+    res.send(budget)
   } catch (error) {
-    console.error(error)
+    throw error
   }
 }
 module.exports = {
   create,
-  update,
+  update: updateBudget,
   delete: deleteBudget,
   getBudget,
 }
