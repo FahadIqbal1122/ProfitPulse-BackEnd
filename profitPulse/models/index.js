@@ -1,8 +1,17 @@
 const mongoose = require("mongoose")
-const userSchema = require("./User")
+const UserSchema = require("./User")
+const ExpenseSchema = require("./Expense")
+const IncomeSchema = require("./Income")
+const BudgetSchema = require("./Budget")
 
-const User = mongoose.model("User", userSchema)
+const User = mongoose.model("User", UserSchema)
+const Expense = mongoose.model("Expense", ExpenseSchema)
+const Income = mongoose.model("Income", IncomeSchema)
+const Budget = mongoose.model("Budget", BudgetSchema)
 
 module.exports = {
   User,
+  Expense,
+  Income,
+  Budget,
 }

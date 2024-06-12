@@ -3,6 +3,9 @@ const logger = require("morgan")
 const cors = require("cors")
 
 const AuthRouter = require("./routes/AuthRouter")
+const IncomeRouter = require("./routes/Incomes")
+const ExpenseRouter = require("./routes/Expenses")
+const BudgetRouter = require("./routes/Budgets")
 
 const PORT = process.env.PORT || 3001
 
@@ -16,6 +19,9 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 
 app.use("/auth", AuthRouter)
+app.use("/expense", ExpenseRouter)
+app.use("/income", IncomeRouter)
+app
 
 app.use("/", (req, res) => {
   res.send(`Connected!`)
