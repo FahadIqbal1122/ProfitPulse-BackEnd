@@ -5,7 +5,7 @@ router.get("/", budgetsCtrl.getBudget)
 
 router.post("/", budgetsCtrl.create)
 
-router.put("/:budgestId", budgetsCtrl.update)
+router.put("/:budget_id", budgetsCtrl.update)
 
 router.delete("/:budgetsId", budgetsCtrl.delete)
 
