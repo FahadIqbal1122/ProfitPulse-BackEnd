@@ -1,4 +1,3 @@
-const income = require("../models/income")
 const Income = require("../models/income")
 module.exports = {
   index,
