@@ -1,9 +1,12 @@
-const budgetsCtrl = require('../controllers/Budgets')
+const router = require("express").Router()
+const budgetsCtrl = require("../controllers/Budgets")
 
-router.post('/budgets/:id', budgetsCtrl.create)
+router.get("/", budgetsCtrl.getBudget)
 
-router.put('/budgets/:budgestId', budgetsCtrl.update)
+router.post("/", budgetsCtrl.create)
 
-router.delete('/budgets/:budgetsId', budgetsCtrl.delete)
+router.put("/:budgestId", budgetsCtrl.update)
+
+router.delete("/:budgetsId", budgetsCtrl.delete)
 
 module.exports = router

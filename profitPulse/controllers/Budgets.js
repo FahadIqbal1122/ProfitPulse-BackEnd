@@ -1,4 +1,13 @@
-const Budget = require('../models/budget')
+const { Budget } = require("../models")
+
+const getBudget = async (req, res) => {
+  try {
+    const budget = await Budget.find({})
+    res.send(budget)
+  } catch (error) {
+    throw error
+  }
+}
 
 async function create(req, res) {
   const budget = await Budget.findById(req.params.id)
@@ -14,10 +23,10 @@ async function create(req, res) {
 
 async function deleteBudget(req, res) {
   const budget = await Budget.findOne({
-    'budget._id': req.params.id,
-    'budgets.user': req.user._id
+    "budget._id": req.params.id,
+    "budgets.user": req.user._id,
   })
-  if (!budget) return res.redirect('/budget')
+  if (!budget) return res.redirect("/budget")
   budget.remove(req.params.id)
   await budget.save()
   res.redirect(`/budgets/${budget._id}`)
@@ -37,5 +46,6 @@ const update = async (req, res) => {
 module.exports = {
   create,
   update,
-  delete: deleteBudget
+  delete: deleteBudget,
+  getBudget,
 }
