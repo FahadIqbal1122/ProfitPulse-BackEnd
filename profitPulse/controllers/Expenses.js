@@ -42,25 +42,6 @@ const DeleteExpense = async (req, res) => {
   }
 }
 
-// const UpdateExpense = async (req, res) => {
-//   try {
-//     const expenseId = req.params.expense_id
-//     const updatedExpense = await Expense.findByIdAndUpdate(
-//       expenseId,
-//       req.body,
-//       { new: true }
-//     )
-
-//     if (!updatedExpense) {
-//       return res.status(404).send("Expense not found")
-//     }
-
-//     res.send(updatedExpense)
-//   } catch (error) {
-//     console.error("Error updating expense:", error)
-//   }
-// }
-
 const UpdateExpense = async (req, res) => {
   try {
     const expenseId = req.params.expense_id
