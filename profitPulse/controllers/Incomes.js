@@ -44,18 +44,6 @@ const deleteIncome = async (req, res) => {
   }
 }
 
-// const updateIncome = async (req, res) => {
-//   try {
-//     const income = await Income.findByIdAndUpdate(
-//       req.params.income_id,
-//       req.body,
-//       { new: true }
-//     )
-//     res.send(income)
-//   } catch (error) {
-//     throw error
-//   }
-// }
 const updateIncome = async (req, res) => {
   try {
     const incomeId = req.params.income_id
@@ -89,7 +77,6 @@ const updateIncome = async (req, res) => {
     res.send(incomeToUpdate)
   } catch (error) {
     console.error("Error updating income:", error)
-    res.status(500).send("Error updating income")
   }
 }
 
