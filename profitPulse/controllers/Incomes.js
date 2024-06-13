@@ -1,4 +1,4 @@
-const { Income } = require("../models")
+const { Income, User } = require("../models")
 
 // GetIncome
 const GetIncome = async (req, res) => {
@@ -14,9 +14,18 @@ const GetIncome = async (req, res) => {
 // createIncome
 const createIncome = async (req, res) => {
   try {
-    const userId = req.userId
-    const income = new Income({ ...req.body })
+    const userId = req.body.userId
+    const income = new Income({ ...req.body, userId })
     const savedIncome = await income.save()
+    const user = await User.findById(userId)
+
+    if (!user) {
+      console.log("User not found")
+    }
+
+    user.totalIncome = user.totalIncome + income.amount
+
+    await user.save()
     res.send(savedIncome)
   } catch (error) {
     console.error("Error creating income:", error)
