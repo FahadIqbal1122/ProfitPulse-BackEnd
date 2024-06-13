@@ -1,7 +1,24 @@
+<<<<<<< HEAD
 const { Income } = require("../models")
 
 // GetIncome
 const GetIncome = async (req, res) => {
+=======
+const Income = require("../models/income")
+module.exports = {
+  index,
+  show,
+  new: newIncome,
+  create,
+  delete: deleteIncome,
+  edit: editIncome,
+  update,
+  findIncome,
+}
+// function Index - to create index
+async function index(req, res) {
+>>>>>>> 849
+
   try {
     const userId = req.userId
     const incomes = await Income.find({ userId })
