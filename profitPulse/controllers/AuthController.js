@@ -65,22 +65,22 @@ const UpdatePassword = async (req, res) => {
     if (matched) {
       let passwordDigest = await middleware.hashPassword(newPassword)
       user = await User.findByIdAndUpdate(req.params.user_id, {
-        passwordDigest,
+        passwordDigest
       })
       let payload = {
         id: user.id,
-        email: user.email,
+        email: user.email
       }
-      return res.send({ status: "Password Updated!", user: payload })
+      return res.send({ status: 'Password Updated!', user: payload })
     }
     res
       .status(401)
-      .send({ status: "Error", msg: "Old Password did not match!" })
+      .send({ status: 'Error', msg: 'Old Password did not match!' })
   } catch (error) {
     console.log(error)
     res.status(401).send({
-      status: "Error",
-      msg: "An error has occurred updating password!",
+      status: 'Error',
+      msg: 'An error has occurred updating password!'
     })
   }
 }
@@ -92,11 +92,7 @@ const CheckSession = async (req, res) => {
 
 module.exports = {
   Login,
-<<<<<<< HEAD
-  Register
-=======
   Register,
   UpdatePassword,
-  CheckSession,
->>>>>>> 23b6703e1997a435f637054d1850cdd343184e95
+  CheckSession
 }

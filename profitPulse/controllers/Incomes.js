@@ -10,7 +10,7 @@ const GetIncome = async (req, res) => {
     console.error("Error fetching incomes:", error)
   }
 }
-
+//test
 // createIncome
 const createIncome = async (req, res) => {
   try {
