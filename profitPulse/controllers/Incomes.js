@@ -18,13 +18,7 @@ const createIncome = async (req, res) => {
     const income = new Income({ ...req.body, userId })
     const savedIncome = await income.save()
     const user = await User.findById(userId)
-
-    if (!user) {
-      console.log("User not found")
-    }
-
     user.totalIncome = user.totalIncome + income.amount
-
     await user.save()
     res.send(savedIncome)
   } catch (error) {
@@ -34,14 +28,19 @@ const createIncome = async (req, res) => {
 
 const deleteIncome = async (req, res) => {
   try {
-    await Income.deleteOne({ _id: req.params.income_id })
+    const incomeId = req.params.income_id
+    const income = await Income.findById(incomeId).populate("userId")
+    const user = income.userId
+    user.totalIncome = user.totalIncome - income.amount
+    await user.save()
+    await Income.deleteOne({ _id: incomeId })
     res.send({
       msg: "Income Deleted",
-      payload: req.params.income_id,
+      payload: incomeId,
       status: "Ok",
     })
   } catch (error) {
-    throw error
+    console.error("Error deleting income:", error)
   }
 }
 
