@@ -2,7 +2,7 @@ const { Expense } = require("../models")
 
 const GetExpenses = async (req, res) => {
   try {
-    const userId = req.user._id
+    const userId = req.userId
     const expenses = await Expense.find({ userId })
     res.send(expenses)
   } catch (error) {
@@ -12,9 +12,8 @@ const GetExpenses = async (req, res) => {
 
 const CreateExpense = async (req, res) => {
   try {
-    const userId = req.user._id
-    const newExpense = new Expense({ ...req.body, userId })
-    const savedExpense = await newExpense.save()
+    const expense = new Expense({ ...req.body })
+    const savedExpense = await expense.save()
     res.send(savedExpense)
   } catch (error) {
     console.error("Error creating expense:", error)
@@ -23,20 +22,14 @@ const CreateExpense = async (req, res) => {
 
 const DeleteExpense = async (req, res) => {
   try {
-    const expenseId = req.params.expense_id
-    const deletedExpense = await Expense.findByIdAndDelete(expenseId)
-
-    if (!deletedExpense) {
-      return res.status(404).send("Expense not found")
-    }
-
+    await Expense.deleteOne({ _id: req.params.expense_id })
     res.send({
       msg: "Expense Deleted",
-      payload: req.params.expenseId,
+      payload: req.params.expense_id,
       status: "Ok",
     })
   } catch (error) {
-    console.error("Error deleting expense:", error)
+    throw error
   }
 }
 
