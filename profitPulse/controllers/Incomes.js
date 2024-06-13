@@ -44,16 +44,52 @@ const deleteIncome = async (req, res) => {
   }
 }
 
+// const updateIncome = async (req, res) => {
+//   try {
+//     const income = await Income.findByIdAndUpdate(
+//       req.params.income_id,
+//       req.body,
+//       { new: true }
+//     )
+//     res.send(income)
+//   } catch (error) {
+//     throw error
+//   }
+// }
 const updateIncome = async (req, res) => {
   try {
-    const income = await Income.findByIdAndUpdate(
-      req.params.income_id,
-      req.body,
-      { new: true }
-    )
-    res.send(income)
+    const incomeId = req.params.income_id
+    const incomeToUpdate = await Income.findById(incomeId).populate("userId")
+
+    if (!incomeToUpdate) {
+      console.log("Income not found")
+    }
+    const user = await User.findOne({ _id: incomeToUpdate.userId })
+    console.log(`user ${user}`)
+    let updateAmount = req.body.amount
+
+    if (updateAmount) {
+      console.log(`updating user data`)
+      // incomeToUpdate.amount = updateAmount
+      const oldIncomeValue = incomeToUpdate.amount
+      console.log(`oldIncomeValue ${oldIncomeValue}`)
+      console.log(`updateAmount ${updateAmount}`)
+      console.log(
+        `user.totalIncome - oldIncomeValue + updateAmount ${
+          user.totalIncome - oldIncomeValue + updateAmount
+        }`
+      )
+      incomeToUpdate.amount = updateAmount
+      user.totalIncome = user.totalIncome - oldIncomeValue + updateAmount
+      console.log(`after user update ${user}`)
+    }
+
+    await user.save()
+    await incomeToUpdate.save()
+    res.send(incomeToUpdate)
   } catch (error) {
-    throw error
+    console.error("Error updating income:", error)
+    res.status(500).send("Error updating income")
   }
 }
 
