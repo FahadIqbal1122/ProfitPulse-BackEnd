@@ -14,7 +14,13 @@ const Register = async (req, res) => {
         .send('A user with that email has already been registered!')
     } else {
       // Creates a new user
-      const user = await User.create({ name, email, passwordDigest })
+      const user = await User.create({
+        name,
+        email,
+        passwordDigest,
+        totalExpense: 0,
+        totalIncome: 0,
+      })
       // Sends the user as a response
       res.send(user)
     }
