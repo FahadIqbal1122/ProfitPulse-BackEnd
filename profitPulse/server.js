@@ -6,6 +6,7 @@ const AuthRouter = require("./routes/AuthRouter")
 const IncomeRouter = require("./routes/Incomes")
 const ExpenseRouter = require("./routes/Expenses")
 const BudgetRouter = require("./routes/Budgets")
+const AiRoutes = require("./routes/openAi")
 
 const PORT = process.env.PORT || 3001
 
@@ -22,6 +23,7 @@ app.use("/auth", AuthRouter)
 app.use("/expense", ExpenseRouter)
 app.use("/income", IncomeRouter)
 app.use("/budget", BudgetRouter)
+app.use("/ai", AiRoutes)
 
 app.use("/", (req, res) => {
   res.send(`Connected!`)

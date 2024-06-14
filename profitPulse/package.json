@@ -4,18 +4,24 @@
   "description": " ",
   "main": "server.js",
   "scripts": {
-    "dev": "node --watch server.js"
+    "dev": "node --watch server.js",
+    "proxy": "http://localhost:3001"
   },
   "author": "Afrah Mohammed",
   "license": "MIT",
   "dependencies": {
+    "@2captcha/captcha-solver": "^1.0.1",
     "@ngneat/falso": "^6.4.0",
+    "axios": "^1.7.2",
     "bcrypt": "^5.1.1",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
     "express": "^4.19.2",
+    "http-proxy-middleware": "^3.0.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^7.3.1",
-    "morgan": "^1.10.0"
+    "morgan": "^1.10.0",
+    "openai": "^4.51.0",
+    "puppeteer": "^22.11.0"
   }
 }
