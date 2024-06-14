@@ -1,4 +1,4 @@
-const { Budget } = require("../models")
+const { Budget } = require('../models')
 
 const getBudget = async (req, res) => {
   try {
@@ -10,12 +10,13 @@ const getBudget = async (req, res) => {
 }
 
 async function create(req, res) {
+  console.log(req.body + 'create function body')
   try {
     const budget = new Budget({ ...req.body })
     const savedBudget = await budget.save()
     res.send(savedBudget)
   } catch (error) {
-    console.error("Error creating budget:", error)
+    console.error('Error creating budget:', error)
   }
 }
 
@@ -23,9 +24,9 @@ async function deleteBudget(req, res) {
   try {
     await Budget.deleteOne({ _id: req.params.budget_id })
     res.send({
-      msg: "Budget Deleted",
+      msg: 'Budget Deleted',
       payload: req.params.budget_id,
-      status: "Ok",
+      status: 'Ok'
     })
   } catch (error) {
     throw error
@@ -48,5 +49,5 @@ module.exports = {
   create,
   update: updateBudget,
   delete: deleteBudget,
-  getBudget,
+  getBudget
 }
