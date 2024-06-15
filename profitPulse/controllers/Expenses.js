@@ -15,9 +15,7 @@ const CreateExpense = async (req, res) => {
     const { userId, note, amount, budgetId } = req.body
 
     if (!userId || !note || !amount || !budgetId) {
-      return res
-        .status(400)
-        .send("Missing required fields: userId, note, amount, budgetId")
+      console.log("Missing required fields: userId, note, amount, budgetId")
     }
 
     const expense = new Expense({ note, amount, userId, budget: budgetId })
@@ -27,11 +25,11 @@ const CreateExpense = async (req, res) => {
     ])
 
     if (!budget || budget.userId.toString() !== userId) {
-      return res.status(404).send("Invalid or non-existent budget")
+      console.log("Invalid or non-existent budget")
     }
 
     if (budget.amount + amount > budget.limit) {
-      return res.status(400).send("Expense exceeds budget limit")
+      console.log("Expense exceeds budget limit")
     }
 
     budget.amount += amount
@@ -46,20 +44,34 @@ const CreateExpense = async (req, res) => {
     res.send(savedExpense)
   } catch (error) {
     console.error("Error creating expense:", error)
-    res.status(500).send("Internal Server Error")
   }
 }
 
 const DeleteExpense = async (req, res) => {
   try {
     const expenseId = req.params.expense_id
-    const expense = await Expense.findById(expenseId).populate("userId")
-    const user = expense.userId
-    user.totalExpense = user.totalExpense - expense.amount
-    await user.save()
+
+    const expense = await Expense.findById(expenseId).populate("budget")
+
+    if (!expense) {
+      console.log("Expense not found")
+    }
+
+    const user = await User.findById(expense.userId)
+    if (user) {
+      user.totalExpense -= expense.amount
+      await user.save()
+    }
+
+    if (expense.budget) {
+      expense.budget.amount -= expense.amount
+      await expense.budget.save()
+    }
+
     await Expense.deleteOne({ _id: expenseId })
+
     res.send({
-      msg: "expense Deleted",
+      msg: "Expense Deleted",
       payload: expenseId,
       status: "Ok",
     })
