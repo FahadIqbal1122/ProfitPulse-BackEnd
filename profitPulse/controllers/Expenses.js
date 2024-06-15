@@ -29,7 +29,7 @@ const CreateExpense = async (req, res) => {
     }
 
     if (budget.amount + amount > budget.limit) {
-      console.log("Expense exceeds budget limit")
+      return res.status(400).send("Expense exceeds budget limit")
     }
 
     budget.amount += amount
@@ -83,35 +83,47 @@ const DeleteExpense = async (req, res) => {
 const UpdateExpense = async (req, res) => {
   try {
     const expenseId = req.params.expense_id
-    const expenseToUpdate = await Expense.findById(expenseId).populate("userId")
+    const { amount } = req.body
+
+    if (!amount) {
+      return res.status(400).send("Missing required field: amount")
+    }
+
+    const expenseToUpdate = await Expense.findById(expenseId).populate("budget")
 
     if (!expenseToUpdate) {
-      console.log("Expense not found")
-    }
-    const user = await User.findOne({ _id: expenseToUpdate.userId })
-    console.log(`user ${user}`)
-    let updateAmount = req.body.amount
-
-    if (updateAmount) {
-      console.log(`updating user data`)
-      const oldExpenseValue = expenseToUpdate.amount
-      console.log(`oldExpenseValue ${oldExpenseValue}`)
-      console.log(`updateAmount ${updateAmount}`)
-      console.log(
-        `user.totalExpense - oldExpenseValue + updateAmount ${
-          user.totalExpense - oldExpenseValue + updateAmount
-        }`
-      )
-      expenseToUpdate.amount = updateAmount
-      user.totalExpense = user.totalExpense - oldExpenseValue + updateAmount
-      console.log(`after user update ${user}`)
+      return res.status(404).send("Expense not found")
     }
 
-    await user.save()
+    const updateAmount = amount - expenseToUpdate.amount
+
+    if (
+      expenseToUpdate.budget &&
+      expenseToUpdate.budget.amount + updateAmount >
+        expenseToUpdate.budget.limit
+    ) {
+      return res.status(400).send("Expense exceeds budget limit")
+    }
+
+    const user = await User.findById(expenseToUpdate.userId)
+    if (user) {
+      user.totalExpense -= expenseToUpdate.amount
+      user.totalExpense += amount
+      await user.save()
+    }
+
+    if (expenseToUpdate.budget) {
+      expenseToUpdate.budget.amount += updateAmount
+      await expenseToUpdate.budget.save()
+    }
+
+    expenseToUpdate.amount = amount
     await expenseToUpdate.save()
+
     res.send(expenseToUpdate)
   } catch (error) {
     console.error("Error updating expense:", error)
+    res.status(500).send("Internal Server Error")
   }
 }
 
