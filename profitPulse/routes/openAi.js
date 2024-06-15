@@ -9,7 +9,7 @@ router.get(
   "/:userId/money-saving-tips",
 
   createProxyMiddleware({
-    target: "http://localhost:3001",
+    target: "https://platform.openai.com/v1/completions",
     changeOrigin: true,
   }),
   AiCtrl.GetMoneySavingTips

@@ -9,6 +9,7 @@ const budgetSchema = new Schema({
     type: Number,
     required: true,
   },
+  amount: { type: Number },
   userId: { type: Schema.Types.ObjectId, ref: "User" },
 })
 
