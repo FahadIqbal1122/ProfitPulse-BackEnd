@@ -12,6 +12,7 @@ const getBudget = async (req, res) => {
 async function create(req, res) {
   try {
     const budget = new Budget({ ...req.body })
+    budget.amount = 0
     const savedBudget = await budget.save()
     res.send(savedBudget)
   } catch (error) {
