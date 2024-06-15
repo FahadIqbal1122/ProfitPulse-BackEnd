@@ -123,7 +123,6 @@ const UpdateExpense = async (req, res) => {
     res.send(expenseToUpdate)
   } catch (error) {
     console.error("Error updating expense:", error)
-    res.status(500).send("Internal Server Error")
   }
 }
 
