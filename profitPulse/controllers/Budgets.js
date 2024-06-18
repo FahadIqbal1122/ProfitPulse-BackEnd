@@ -2,7 +2,8 @@ const { Budget } = require('../models')
 
 const getBudget = async (req, res) => {
   try {
-    const budget = await Budget.find({})
+    const userId = req.userId
+    const budget = await Budget.find({ userId })
     res.send(budget)
   } catch (error) {
     throw error
@@ -12,6 +13,7 @@ const getBudget = async (req, res) => {
 async function create(req, res) {
   console.log(req.body + 'create function body')
   try {
+    const userId = req.userId
     const budget = new Budget({ ...req.body })
     const savedBudget = await budget.save()
     res.send(savedBudget)
