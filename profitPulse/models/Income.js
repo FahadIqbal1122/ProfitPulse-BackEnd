@@ -1,15 +1,19 @@
-const { Schema } = require("mongoose")
+const { Schema } = require('mongoose')
 
 const incomeSchema = new Schema({
   name: {
     type: String,
-    required: true,
+    required: true
   },
   amount: {
     type: Number,
-    required: true,
+    required: true
   },
-  userId: { type: Schema.Types.ObjectId, ref: "User" },
+  month: {
+    type: String,
+    required: true
+  },
+  userId: { type: Schema.Types.ObjectId, ref: 'User' }
 })
 
 module.exports = incomeSchema
