@@ -14,7 +14,7 @@ const GetFinances = async (req, res) => {
     if (!mongoose.Types.ObjectId.isValid(userId)) {
       return res.status(400).send({ error: "Invalid user ID" })
     }
-    const validUserId = mongoose.Types.ObjectId(userId)
+    const validUserId = new mongoose.Types.ObjectId(userId)
 
     const user = await User.findById(validUserId)
     const incomes = await Income.find({ userId: userId })
@@ -36,7 +36,6 @@ const GetMoneySavingTips = async (req, res) => {
   try {
     const userId = req.params.userId
     const user = await User.findById(userId)
-    console.log("User:", user)
 
     if (!user) {
       return res.status(404).send("User not found")
@@ -45,7 +44,6 @@ const GetMoneySavingTips = async (req, res) => {
     const incomes = await Income.find({ userId })
     const expenses = await Expense.find({ userId })
     const budgets = await Budget.find({ userId })
-    console.log(incomes)
     const { name, totalIncome, totalExpense } = user
 
     const summary = `**Financial Summary**
@@ -73,14 +71,30 @@ const GetMoneySavingTips = async (req, res) => {
 
       Based on this information, can you suggest some money-saving tips for ${name}?`
 
+    console.log(prompt)
+
     const response = await axios.post(
-      "https://platform.openai.com/v1/completions",
+      "https://api.openai.com/v1/chat/completions",
       {
-        model: "text-davinci-003",
-        prompt: prompt,
-        max_tokens: 1500,
-        temperature: 0.7,
+        model: "gpt-3.5-turbo",
+        messages: [
+          {
+            role: "system",
+            content: "You are a helpful assistant.",
+          },
+          {
+            role: "user",
+            content: "Hello!",
+          },
+        ],
       },
+      // {
+      //   model: "text-davinci-003",
+      //   // prompt: prompt,
+      //   messages: [{ role: "user", content: "Say this is a test!" }],
+      //   // max_tokens: 1500,
+      //   temperature: 0.7,
+      // },
       {
         headers: {
           Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
@@ -89,7 +103,7 @@ const GetMoneySavingTips = async (req, res) => {
     )
     const tips = response.data.choices[0].text.trim()
     res.send({ tips })
-    console.log({ tips })
+    // console.log({ tips })
   } catch (error) {
     console.error("Error fetching money-saving tips:", error)
   }

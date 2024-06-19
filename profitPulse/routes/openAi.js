@@ -8,10 +8,10 @@ router.get("/:userId", AiCtrl.GetFinances)
 router.get(
   "/:userId/money-saving-tips",
 
-  createProxyMiddleware({
-    target: "https://platform.openai.com/v1/completions",
-    changeOrigin: true,
-  }),
+  // createProxyMiddleware({
+  //   target: "https://platform.openai.com/v1/completions",
+  //   changeOrigin: true,
+  // }),
   AiCtrl.GetMoneySavingTips
 )
 
