@@ -3,7 +3,7 @@ const { Income, User } = require("../models")
 // GetIncome
 const GetIncome = async (req, res) => {
   try {
-    const userId = req.userId
+    const userId = req.params.userId
     const incomes = await Income.find({ userId })
     res.send(incomes)
   } catch (error) {

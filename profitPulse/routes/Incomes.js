@@ -1,7 +1,7 @@
 const router = require("express").Router()
 const incomeCtrl = require("../controllers/Incomes")
 
-router.get("/", incomeCtrl.GetIncome)
+router.get("/:userId", incomeCtrl.GetIncome)
 
 router.post("/", incomeCtrl.createIncome)
 

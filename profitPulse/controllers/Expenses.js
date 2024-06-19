@@ -2,7 +2,7 @@ const { Expense, User, Budget } = require("../models")
 
 const GetExpenses = async (req, res) => {
   try {
-    const userId = req.userId
+    const userId = req.params.userId
     const expenses = await Expense.find({ userId })
     res.send(expenses)
   } catch (error) {
