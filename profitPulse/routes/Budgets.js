@@ -1,7 +1,7 @@
 const router = require("express").Router()
 const budgetsCtrl = require("../controllers/Budgets")
 
-router.get("/", budgetsCtrl.getBudget)
+router.get("/:userId", budgetsCtrl.getBudget)
 
 router.post("/", budgetsCtrl.create)
 

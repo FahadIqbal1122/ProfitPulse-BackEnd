@@ -2,10 +2,13 @@ const { Budget } = require("../models")
 
 const getBudget = async (req, res) => {
   try {
-    const budget = await Budget.find({})
+    console.log(req.params)
+    const userId = req.params.userId
+    const budget = await Budget.find({ userId })
     res.send(budget)
   } catch (error) {
-    throw error
+    // throw error
+    console.error("Error fetching budgets:", error)
   }
 }
 
@@ -22,7 +25,7 @@ async function create(req, res) {
 
 async function deleteBudget(req, res) {
   try {
-    await Budget.deleteOne({ _id: req.params.budget_id })
+    await Budget.deleteOne({ _id: req.params.budgetsId })
     res.send({
       msg: "Budget Deleted",
       payload: req.params.budget_id,
