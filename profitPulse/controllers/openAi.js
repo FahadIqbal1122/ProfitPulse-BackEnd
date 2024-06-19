@@ -4,13 +4,19 @@ const axios = require("axios")
 const puppeteer = require("puppeteer")
 const solver = require("@2captcha/captcha-solver")
 require("dotenv").config()
+const mongoose = require("mongoose")
 
 const apiKey = process.env.OPENAI_API_KEY
 
 const GetFinances = async (req, res) => {
   try {
     const userId = req.params.userId
-    const user = await User.findById(userId)
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+      return res.status(400).send({ error: "Invalid user ID" })
+    }
+    const validUserId = mongoose.Types.ObjectId(userId)
+
+    const user = await User.findById(validUserId)
     const incomes = await Income.find({ userId: userId })
     const expenses = await Expense.find({ userId: userId })
     const budgets = await Budget.find({ userId: userId })
