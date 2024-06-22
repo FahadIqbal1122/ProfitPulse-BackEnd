@@ -10,7 +10,6 @@ const GetIncome = async (req, res) => {
     console.error("Error fetching incomes:", error)
   }
 }
-//test
 // createIncome
 const createIncome = async (req, res) => {
   try {
@@ -57,19 +56,9 @@ const updateIncome = async (req, res) => {
     let updateAmount = req.body.amount
 
     if (updateAmount) {
-      console.log(`updating user data`)
-      // incomeToUpdate.amount = updateAmount
       const oldIncomeValue = incomeToUpdate.amount
-      console.log(`oldIncomeValue ${oldIncomeValue}`)
-      console.log(`updateAmount ${updateAmount}`)
-      console.log(
-        `user.totalIncome - oldIncomeValue + updateAmount ${
-          user.totalIncome - oldIncomeValue + updateAmount
-        }`
-      )
       incomeToUpdate.amount = updateAmount
       user.totalIncome = user.totalIncome - oldIncomeValue + updateAmount
-      console.log(`after user update ${user}`)
     }
 
     await user.save()
