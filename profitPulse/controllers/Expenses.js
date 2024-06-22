@@ -13,37 +13,32 @@ const GetExpenses = async (req, res) => {
 const CreateExpense = async (req, res) => {
   try {
     const { userId, note, amount, budgetId } = req.body
-
     if (!userId || !note || !amount || !budgetId) {
       console.log("Missing required fields: userId, note, amount, budgetId")
+      return res.status(400).send("Missing required fields")
     }
-
-    const expense = new Expense({ note, amount, userId, budget: budgetId })
-    const [savedExpense, budget] = await Promise.all([
-      expense.save(),
-      Budget.findById(budgetId),
-    ])
-
+    const budget = await Budget.findById(budgetId)
     if (!budget || budget.userId.toString() !== userId) {
       console.log("Invalid or non-existent budget")
+      return res.status(400).send("Invalid or non-existent budget")
     }
-
-    if (budget.amount + amount > budget.limit) {
+    const numAmount = +amount
+    if (budget.amount + numAmount > budget.limit) {
       return res.status(400).send("Expense exceeds budget limit")
     }
-
-    budget.amount += amount
+    budget.amount += numAmount
     await budget.save()
-
+    const savedExpense = new Expense({ note, amount, userId, budget: budgetId })
+    await savedExpense.save()
     const user = await User.findById(userId)
     if (user) {
-      user.totalExpense += amount
+      user.totalExpense += numAmount
       await user.save()
     }
-
     res.send(savedExpense)
   } catch (error) {
     console.error("Error creating expense:", error)
+    res.status(500).send("Internal Server Error")
   }
 }
 
