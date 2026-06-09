@@ -1,7 +1,10 @@
+
+require('dotenv').config()
 const express = require("express")
+const mongoose = require('mongoose')
 const logger = require("morgan")
 const cors = require("cors")
-
+ 
 const AuthRouter = require("./routes/AuthRouter")
 const IncomeRouter = require("./routes/Incomes")
 const ExpenseRouter = require("./routes/Expenses")

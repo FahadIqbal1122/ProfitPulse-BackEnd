@@ -5,8 +5,8 @@ router.get("/:userId", budgetsCtrl.getBudget)
 
 router.post("/", budgetsCtrl.create)
 
-router.put("/:budget_id", budgetsCtrl.update)
+router.put("/:id", budgetsCtrl.update)
 
-router.delete("/:budgetsId", budgetsCtrl.delete)
+router.delete("/:id", budgetsCtrl.delete)
 
 module.exports = router
