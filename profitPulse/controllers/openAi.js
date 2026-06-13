@@ -28,7 +28,7 @@ async function GetMoneySavingTips(req, res) {
     const budgets = await Budget.find({ userId })
     const { name, totalIncome, totalExpense } = user
 
-    const summary = `**Financial Summary**
+    const summary = `Financial Summary**
             - User: ${name}
             - Total Income: $${totalIncome}
             - Total Expense: $${totalExpense}
@@ -47,10 +47,7 @@ ${budgets
   )
   .join("\n")}
 
-  
-
-  
-`
+  `
 
     const prompt = `
 ${summary}
