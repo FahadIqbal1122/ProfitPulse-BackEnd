@@ -36,6 +36,12 @@ const Login = async (req, res) => {
     const { email, password } = req.body
     // Finds a user by a particular field (in this case, email)
     const user = await User.findOne({ email })
+    if (!user) {
+  return res.status(401).send({
+    status: "Error",
+    msg: "User not found",
+  })
+}
     // Checks if the password matches the stored digest
     let matched = await middleware.comparePassword(
       user.passwordDigest,

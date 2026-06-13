@@ -13,7 +13,7 @@ const GetExpenses = async (req, res) => {
 const CreateExpense = async (req, res) => {
   try {
     const { userId, note, amount, budgetId } = req.body
-    if (!userId || !note || !amount || !budgetId) {
+    if (!userId || !note ||  !amount || !budgetId) {
       console.log("Missing required fields: userId, note, amount, budgetId")
       return res.status(400).send("Missing required fields")
     }
@@ -46,32 +46,37 @@ const DeleteExpense = async (req, res) => {
   try {
     const expenseId = req.params.expense_id
 
-    const expense = await Expense.findById(expenseId).populate("budget")
+    const expense = await Expense.findById(expenseId)
+
+    // const expense = await Expense.findById(expenseId).populate("budget")
 
     if (!expense) {
       console.log("Expense not found")
+      return res.status(404).send({ error: "Expense not found" })
     }
 
     const user = await User.findById(expense.userId)
     if (user) {
-      user.totalExpense -= expense.amount
+      user.totalExpense -= Number(expense.amount)
       await user.save()
     }
-
-    if (expense.budget) {
-      expense.budget.amount -= expense.amount
-      await expense.budget.save()
+     const budget = await Budget.findById(expense.budget)
+    if (budget) {
+      budget.amount -= Number(expense.amount)
+      await budget.save()
     }
+    
+    await Expense.findByIdAndDelete(expenseId)
+    // await Expense.deleteOne({ _id: expenseId })
 
-    await Expense.deleteOne({ _id: expenseId })
-
-    res.send({
+    return res.status(200).send({
       msg: "Expense Deleted",
       payload: expenseId,
       status: "Ok",
     })
   } catch (error) {
     console.error("Error deleting expense:", error)
+    return res.status(500).send({ error: "Failed to delete expense" })
   }
 }
 

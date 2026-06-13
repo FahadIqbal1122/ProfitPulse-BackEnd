@@ -5,47 +5,62 @@ const getBudget = async (req, res) => {
     console.log(req.params)
     const userId = req.params.userId
     const budget = await Budget.find({ userId })
-    res.send(budget)
+    return res.status(200).send(budget)
   } catch (error) {
     // throw error
-    console.error("Error fetching budgets:", error)
+   console.error("Error fetching budgets:", error);
+    return res.status(500).send({ error: "Failed to get budgets" });
   }
-}
+  }
+
+  // CREATE budget
 
 async function create(req, res) {
   try {
-    const budget = new Budget({ ...req.body })
+    const budget = new Budget(req.body )
     budget.amount = 0
     const savedBudget = await budget.save()
-    res.send(savedBudget)
+    return res.status(200).send(savedBudget)
   } catch (error) {
     console.error("Error creating budget:", error)
+    return res.status(500).send({ error: "Failed to create budget" })
   }
 }
-
+// DELETE budget
 async function deleteBudget(req, res) {
   try {
-    await Budget.deleteOne({ _id: req.params.budgetsId })
-    res.send({
+    // Find a budget by its ID and delete it in one step
+    await Budget.findByIdAndDelete(req.params.id);
+    // Delete one document where _id matches the given value
+     // await Budget.deleteOne({ _id: req.params.budgetsId })
+   return res.send({
       msg: "Budget Deleted",
-      payload: req.params.budget_id,
+      payload: req.params.id,
+      // payload: req.params.budget_id,
       status: "Ok",
     })
   } catch (error) {
-    throw error
+       console.error("Error deleting budget:", error);
+    return res.status(500).send({ error: "Failed to delete budget" });
   }
 }
-
+// UPDATE budget
 const updateBudget = async (req, res) => {
   try {
-    const budget = await Budget.findByIdAndUpdate(
-      req.params.budget_id,
+    const updatedBudget = await Budget.findByIdAndUpdate(
+      // req.params.budget_id,
+       req.params.id,
       req.body,
       { new: true }
     )
-    res.send(budget)
+     if (!updatedBudget) {
+      return res.status(404).send({ error: "Budget not found" })
+    }
+
+   return res.status(200).send(updatedBudget)
   } catch (error) {
-    throw error
+   console.error("Error updating budget:", error);
+    return res.status(500).send({ error: "Failed to update budget" });
   }
 }
 module.exports = {
