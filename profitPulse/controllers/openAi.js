@@ -37,7 +37,7 @@ async function GetMoneySavingTips(req, res) {
             - Expense Categories: ${expenses
         .map((expense) => `- ${expense.note}: ${expense.amount}`).join("\n")}
 
-            - Budgets:Budgets:
+            - Budgets:
 ${budgets
   .map(
     (budget) =>
@@ -49,14 +49,20 @@ ${budgets
 
   `
 
-    const prompt = `
+ const prompt = `
 ${summary}
 
-Based on this financial information for ${name},
-suggest 5 personalized money-saving tips.
+You are analyzing the user's actual financial data.
 
-Mention specific budgets, expenses, and income data when relevant.
-Keep the advice practical and realistic.
+Give 5 personalized money-saving tips.
+
+Rules:
+- Only use the financial data provided.
+- Do not assume missing information.
+- Do not invent totals or averages.
+- Do not suggest increasing income.
+- Focus on saving money and budgeting.
+- If spending in a category is already low, acknowledge it instead of suggesting large changes.
 `
 
     // const options = {
@@ -82,7 +88,7 @@ const completion = await groq.chat.completions.create({
     {
       role: "system",
       content:
-        "You are a helpful financial assistant. Give simple money-saving tips."
+        "You are a personal finance assistant. Give practical money-saving advice based only on the user's provided data. Do not invent numbers."
     },
     {
       role: "user",
